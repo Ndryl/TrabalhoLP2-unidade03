@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 
 import com.example.MongoSpring.Enity.users.AutheticationDTO;
 import com.example.MongoSpring.Enity.users.RegisterDTO;
@@ -31,12 +33,25 @@ public class AuthenticationController {
     private TokenService tokenService;
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody @Valid AutheticationDTO data) {
+    public ResponseEntity login(@RequestBody @Valid AutheticationDTO data, HttpServletResponse response) {
         var userNamePassword = new UsernamePasswordAuthenticationToken(data.name(), data.password());
         var auth = this.authenticationManager.authenticate(userNamePassword);
 
+        // Gera o token JWT
         var token = tokenService.generateToken((Users) auth.getPrincipal());
 
+        // Configura o cookie
+        Cookie cookie = new Cookie("authToken", token);
+        cookie.setHttpOnly(true); // Impede acesso via JavaScript
+        cookie.setSecure(false); // Use true em produção com HTTPS
+        cookie.setPath("/"); // Disponível em todas as rotas do domínio
+        cookie.setMaxAge(60 * 60); // Expiração em segundos (1 hora, por exemplo)
+
+        // Adiciona o cookie à resposta
+        response.addCookie(cookie);
+
+        // Retorna uma resposta de sucesso (opcionalmente pode retornar mais informações
+        // no corpo)
         return ResponseEntity.ok(new UserResponseDTO(token));
     }
 
