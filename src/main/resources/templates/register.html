@@ -11,13 +11,22 @@
       integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
       crossorigin="anonymous"
     />
-    <title>Login</title>
-    <script src="/js/main.js" defer></script>
+    <title>Registrar</title>
+    <script src="/js/register.js" defer></script>
   </head>
   <body>
-    <h1>Página de Login</h1>
+    <h1>Página de Registro</h1>
     <div class="mb-3">
       <label for="formGroupExampleInput" class="form-label">Usuário</label>
+      <input
+        type="text"
+        class="form-control"
+        id="formGroupExampleInput"
+        placeholder="Digite seu usuário"
+      />
+    </div>
+    <div class="mb-3">
+      <label for="formGroupExampleInput" class="form-label">Email</label>
       <input
         type="text"
         class="form-control"
@@ -35,11 +44,11 @@
       />
     </div>
     <div class="col-12">
-      <button type="submit" id="loginButton" class="btn btn-primary">
-        Entrar
-      </button>
-      <button type="submit" id="registerButton" class="btn btn-secondary">
+      <button type="submit" id="registerButton" class="btn btn-primary">
         Cadastrar
+      </button>
+      <button type="submit" id="beginButton" class="btn btn-secondary">
+        Voltar
       </button>
     </div>
   </body>

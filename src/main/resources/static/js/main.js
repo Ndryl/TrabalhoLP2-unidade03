@@ -43,3 +43,8 @@ document.getElementById("loginButton").addEventListener("click", async () => {
     alert("Erro ao conectar-se ao servidor.");
   }
 });
+document
+  .getElementById("registerButton")
+  .addEventListener("click", function () {
+    window.location.href = "/register";
+  });
