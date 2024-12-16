@@ -16,6 +16,11 @@ public class ProductServiceImpl implements ProductService {
     private ProductRepo productRepo;
 
     @Override
+    public List<Product> getProduct(String category) {
+        return productRepo.findByCategory(category);
+    }
+
+    @Override
     public List<Product> getProducts() {
         return productRepo.findAll();
     }
@@ -40,6 +45,7 @@ public class ProductServiceImpl implements ProductService {
         productVar.setPrice(product.getPrice());
         productVar.setQuantity(product.getQuantity());
         productVar.setDescription(product.getDescription());
+        productVar.setCategory(product.getCategory());
         productRepo.save(productVar);
         return productVar;
     }

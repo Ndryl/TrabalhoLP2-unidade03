@@ -26,6 +26,11 @@ public class ProductControler {
         return productService.getProducts();
     }
 
+    @GetMapping("/{category}")
+    public List<Product> getProduct(@PathVariable String category) {
+        return productService.getProduct(category);
+    }
+
     @PostMapping("/insert")
     public Product insert(@RequestBody Product product) {
         return productService.addProoducts(product);
