@@ -15,6 +15,7 @@ window.onload = async () => {
                 <td>${product.name}</td>
                 <td>${product.price}</td>
                 <td>${product.quantity}</td>
+                <td>${product.category}</td>
                 <td>${product.description}</td>
             `;
             tbody.appendChild(row);
