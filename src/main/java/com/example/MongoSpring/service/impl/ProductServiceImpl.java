@@ -50,4 +50,19 @@ public class ProductServiceImpl implements ProductService {
         return productVar;
     }
 
+    @Override
+    public Product updateQuantity(String name, int quantity) {
+
+        Product product = productRepo.findByName(name)
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado com o nome: " + name));
+
+        if (product.getQuantity() + quantity < 0) {
+            throw new RuntimeException("Quantidade insuficiente no estoque. Disponível: " + product.getQuantity());
+        }
+
+        product.setQuantity(product.getQuantity() + quantity);
+
+        return productRepo.save(product);
+    }
+
 }

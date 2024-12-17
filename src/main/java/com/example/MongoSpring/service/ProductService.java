@@ -16,4 +16,6 @@ public interface ProductService {
 
     public Product updateProduct(int id, Product product);
 
+    Product updateQuantity(String name, int quantity);
+
 }

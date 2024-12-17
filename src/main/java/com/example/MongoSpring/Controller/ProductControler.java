@@ -2,6 +2,7 @@ package com.example.MongoSpring.Controller;
 
 import java.util.List;
 
+import com.example.MongoSpring.Enity.QuantityUpdateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,7 +41,11 @@ public class ProductControler {
     @PutMapping("/update")
     public Product update(@PathVariable int id, @RequestBody Product product) {
         return productService.updateProduct(id, product);
+    }
 
+    @PutMapping("/update-quantity")
+    public Product decreaseQuantity(@RequestBody QuantityUpdateRequest request) {
+        return productService.updateQuantity(request.getName(), request.getQuantity());
     }
 
     @DeleteMapping("/delete/{id}")
