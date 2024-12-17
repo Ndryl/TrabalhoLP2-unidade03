@@ -31,11 +31,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product deleProduct(int id) {
-        Product product = productRepo.findById(id).get();
-        productRepo.delete(product);
-        return product;
-
+    public Product deleProduct(Product product) {
+        Product delProduct = productRepo.findByName(product.getName()).get();
+        productRepo.deleteByName(delProduct.getName());
+        return delProduct;
     }
 
     @Override

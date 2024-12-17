@@ -48,8 +48,8 @@ public class ProductControler {
         return productService.updateQuantity(request.getName(), request.getQuantity());
     }
 
-    @DeleteMapping("/delete/{id}")
-    public Product delete(@PathVariable int id, @RequestBody Product product) {
-        return productService.deleProduct(id);
+    @DeleteMapping("/delete")
+    public Product delete(@RequestBody Product product) {
+        return productService.deleProduct(product);
     }
 }
