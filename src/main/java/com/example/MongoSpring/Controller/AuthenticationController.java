@@ -42,10 +42,10 @@ public class AuthenticationController {
 
         // Configura o cookie
         Cookie cookie = new Cookie("authToken", token);
-        cookie.setHttpOnly(true); // Impede acesso via JavaScript
-        cookie.setSecure(false); // Use true em produção com HTTPS
-        cookie.setPath("/"); // Disponível em todas as rotas do domínio
-        cookie.setMaxAge(60 * 60); // Expiração em segundos (1 hora, por exemplo)
+        cookie.setHttpOnly(true);
+        cookie.setSecure(false);
+        cookie.setPath("/");
+        cookie.setMaxAge(60 * 60);
 
         // Adiciona o cookie à resposta
         response.addCookie(cookie);
