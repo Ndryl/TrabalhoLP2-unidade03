@@ -7,7 +7,7 @@ document
   .addEventListener("click", async () => {
     // Captura os valores dos campos
     const username = document.getElementById("formGroupExampleInput").value;
-    const email = document.getElementById("formGroupExampleInput").value;
+    const email = document.getElementById("formGroupExampleInputEmail").value;
     const password = document.getElementById("formGroupExampleInput2").value;
 
     // Verifica se os campos não estão vazios

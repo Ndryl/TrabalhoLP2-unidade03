@@ -26,9 +26,10 @@ public class Users implements UserDetails {
     private String password;
     private UserRole role; // Enum para representar os papéis de usuário
 
-    public Users(String name, String password, UserRole userrole) {
+    public Users(String name, String password, String email,  UserRole userrole) {
         this.name = name;
         this.password = password;
+        this.email = email;
         this.role = userrole;
     }
 
