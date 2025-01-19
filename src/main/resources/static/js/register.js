@@ -17,7 +17,6 @@ document
     }
 
     try {
-      // Faz a requisição para a API de registro
       const response = await fetch("http://localhost:8080/auth/register", {
         method: "POST",
         headers: {
@@ -27,19 +26,24 @@ document
           name: username,
           email: email,
           password: password,
-          role: "ADMIN", // Define a role como ADMIN
+          role: "ADMIN",
         }),
       });
-
+    
       // Verifica se a resposta foi bem-sucedida
       if (!response.ok) {
-        const error = await response.json();
-        alert(`Erro: ${error.message || "Falha no registro"}`);
+        let errorMessage = "Falha no registro";
+        if (response.headers.get("Content-Type")?.includes("application/json")) {
+          const error = await response.json();
+          errorMessage = error.message || errorMessage;
+        } else {
+          errorMessage = await response.text();
+        }
+        alert(`Erro: ${errorMessage}`);
         return;
       }
-
+    
       alert("Usuário registrado com sucesso!");
-      // Redireciona para outra página, se necessário
       window.location.href = "/begin";
     } catch (error) {
       console.error("Erro ao registrar usuário:", error);
