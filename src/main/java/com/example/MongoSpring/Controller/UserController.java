@@ -3,6 +3,7 @@ package com.example.MongoSpring.Controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.MongoSpring.DTO.UserDTO;
 import com.example.MongoSpring.Enity.users.Users;
 import com.example.MongoSpring.service.UserService;
 
@@ -45,9 +47,15 @@ public class UserController {
 
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public Users delete(@PathVariable String id, @RequestBody Users user) {
         return userService.deleteUser(id);
+    }
+    @GetMapping("minhasBuscas/{id}")
+    public ResponseEntity<UserDTO>getBuscasUsuarios(@PathVariable String id){
+        return userService.getUsuarioComObjetos(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
 }

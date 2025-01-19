@@ -1,17 +1,14 @@
 package com.example.MongoSpring.service;
 
-import java.util.List;
-
+import com.example.MongoSpring.DTO.UserDTO;
 import com.example.MongoSpring.Enity.users.Users;
+import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
-
-    public List<Users> getUsers();
-
-    public Users addUsers(Users user);
-
-    public Users deleteUser(String id);
-
-    public Users updateUser(String id, Users user);
-
+    Optional<UserDTO> getUsuarioComObjetos(String userId); // Busca usuário e objetos relacionados
+    List<Users> getUsers(); // Busca todos os usuários
+    Users addUsers(Users user); // Adiciona um novo usuário
+    Users deleteUser(String id); // Remove um usuário
+    Users updateUser(String id, Users user); // Atualiza um usuário
 }
