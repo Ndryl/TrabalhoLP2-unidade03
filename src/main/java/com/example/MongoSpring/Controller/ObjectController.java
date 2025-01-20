@@ -4,6 +4,8 @@ package com.example.MongoSpring.Controller;
 import java.util.List;
 
 import com.example.MongoSpring.Enity.QuantityUpdateRequest;
+
+import org.opencv.core.Mat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,8 +14,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.MongoSpring.Enity.ImageUtils;
 import com.example.MongoSpring.Enity.MyObject;
 import com.example.MongoSpring.Enity.Product;
 import com.example.MongoSpring.service.ObjectService;
@@ -30,6 +34,12 @@ public class ObjectController {
     public MyObject saveObject(@RequestBody MyObject myObject) {
         return ObjectService.saveObject(myObject); // Certifique-se de usar o nome correto de 'ObjectService' com "O" maiúsculo
     }
+    @PostMapping("/insertWithImage")
+    public MyObject saveObjectWithImage(@RequestParam String imagePath, @RequestParam String userId) {
+        return ObjectService.saveImageAsObject(imagePath, userId);
+    }
+
+
     @DeleteMapping("/delete/{idObject}")
     public void deleteObject(@PathVariable String idObject){
         ObjectService.deleteObject(idObject);
