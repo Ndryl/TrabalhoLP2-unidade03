@@ -68,12 +68,12 @@ public class ObjectService {
             MyObject existingObject = optionalObject.get();
             existingObject.setDate(updatedObject.getDate());
             existingObject.setPhoto(updatedObject.getPhoto());
-            existingObject.setId(updatedObject.getId());
             return objectRepo.save(existingObject);
         } else {
             throw new RuntimeException("Objeto não encontrado com o ID: " + id);
         }
     }
+    
 
     // Método para deletar um objeto pelo ID
     public void deleteObject(String id) {

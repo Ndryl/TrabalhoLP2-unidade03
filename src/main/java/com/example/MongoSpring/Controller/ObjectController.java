@@ -1,6 +1,7 @@
 package com.example.MongoSpring.Controller;
 
 
+import java.time.LocalDate;
 import java.util.List;
 
 import com.example.MongoSpring.Enity.QuantityUpdateRequest;
@@ -36,8 +37,11 @@ public class ObjectController {
     }
     @PostMapping("/insertWithImage")
     public MyObject saveObjectWithImage(@RequestParam String imagePath, @RequestParam String userId) {
-        return ObjectService.saveImageAsObject(imagePath, userId);
+        byte[] imageBytes = ImageUtils.matToBytes(ImageUtils.loadImage(imagePath));
+        MyObject myObject = new MyObject(null, LocalDate.now(), imageBytes, userId);
+        return ObjectService.saveObject(myObject);
     }
+
 
 
     @DeleteMapping("/delete/{idObject}")
