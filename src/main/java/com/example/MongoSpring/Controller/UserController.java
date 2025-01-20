@@ -17,11 +17,19 @@ import com.example.MongoSpring.DTO.UserDTO;
 import com.example.MongoSpring.Enity.users.Users;
 import com.example.MongoSpring.service.UserService;
 
+
 @RestController
 @RequestMapping("/api/Users")
 public class UserController {
     @Autowired
     private UserService userService;
+
+    @GetMapping("/user/{id}")
+    public Users getUser(@PathVariable String id) {
+        return userService.getUser(id);
+    }
+
+    
 
     @GetMapping("/all")
     public List<Users> getUsers() {
@@ -41,16 +49,17 @@ public class UserController {
 
     }
 
-    @PutMapping("/update")
+    @PutMapping("/update/{id}")
     public Users update(@PathVariable String id, @RequestBody Users user) {
         return userService.updateUser(id, user);
-
     }
+
 
     @DeleteMapping("/{id}")
-    public Users delete(@PathVariable String id, @RequestBody Users user) {
-        return userService.deleteUser(id);
+    public void delete(@PathVariable String id) {
+        userService.deleteUser(id);
     }
+
     @GetMapping("minhasBuscas/{id}")
     public ResponseEntity<UserDTO>getBuscasUsuarios(@PathVariable String id){
         return userService.getUsuarioComObjetos(id)

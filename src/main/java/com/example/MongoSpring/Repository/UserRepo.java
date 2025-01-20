@@ -6,5 +6,5 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.example.MongoSpring.Enity.users.Users;
 
 public interface UserRepo extends MongoRepository<Users, String> {
-    UserDetails findByname(String name); // Usa o email como identificador
+    UserDetails findByname(String name);
 }

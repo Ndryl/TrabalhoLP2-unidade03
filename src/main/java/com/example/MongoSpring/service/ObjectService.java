@@ -27,8 +27,8 @@ public class ObjectService {
     }
 
     // Método para buscar objetos pelo ID do usuário
-    public List<MyObject> getObjectsByUserId(String userId) {
-        return objectRepo.findByUserId(userId);
+    public List<MyObject> getObjectsByUser(String user) {
+        return objectRepo.findByUserId(user);
     }
 
     // Método para salvar um novo objeto
@@ -43,7 +43,7 @@ public class ObjectService {
             MyObject existingObject = optionalObject.get();
             existingObject.setDate(updatedObject.getDate());
             existingObject.setPhoto(updatedObject.getPhoto());
-            existingObject.setUserId(updatedObject.getUserId());
+            existingObject.setId(updatedObject.getId());
             return objectRepo.save(existingObject);
         } else {
             throw new RuntimeException("Objeto não encontrado com o ID: " + id);

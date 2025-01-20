@@ -11,4 +11,5 @@ public interface UserService {
     Users addUsers(Users user); // Adiciona um novo usuário
     Users deleteUser(String id); // Remove um usuário
     Users updateUser(String id, Users user); // Atualiza um usuário
+    Users getUser(String id);
 }
