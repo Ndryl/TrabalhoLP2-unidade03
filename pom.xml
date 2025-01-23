@@ -96,6 +96,12 @@
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.bytedeco</groupId>
+            <artifactId>javacv-platform</artifactId>
+            <version>1.5.8</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -114,10 +120,6 @@
                 </executions>
                 <configuration>
                     <mainClass>com.example.MongoSpring.Enity.users.WebCamapp</mainClass>
-                    <modules>
-                        <module>javafx.controls</module>
-                        <module>javafx.fxml</module>
-                    </modules>
                 </configuration>
             </plugin>
 

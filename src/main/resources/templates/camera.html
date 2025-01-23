@@ -3,49 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detecção em Tempo Real</title>
+    <title>Camera Capture</title>
 </head>
 <body>
-<h1>Detecção de Objeto em Tempo Real</h1>
-<video id="video" autoplay playsinline style="width: 640px; height: 480px; border: 1px solid black;"></video>
-<canvas id="canvas" style="display: none;"></canvas>
-<img id="processedFrame" alt="Imagem Processada" style="display: block; width: 640px; height: 480px; border: 1px solid green;">
+<h1>Capture Image and Detect Object</h1>
+<video id="video" width="640" height="480" autoplay></video>
+<canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
+<button id="capture">Capture Image</button>
+<img id="processedImage" alt="Processed Image" />
 
 <script>
-    const video = document.getElementById('video');
-    const canvas = document.getElementById('canvas');
-    const processedFrame = document.getElementById('processedFrame');
+    const video = document.getElementById("video");
+    const canvas = document.getElementById("canvas");
+    const captureButton = document.getElementById("capture");
+    const processedImage = document.getElementById("processedImage");
 
-    // Acessar a câmera
-    navigator.mediaDevices.getUserMedia({ video: true })
+    // Access the camera
+    navigator.mediaDevices
+        .getUserMedia({ video: true })
         .then((stream) => {
             video.srcObject = stream;
         })
-        .catch((error) => console.error('Erro ao acessar a câmera:', error));
+        .catch((err) => console.error("Error accessing the camera:", err));
 
-    // Enviar frames periodicamente para o backend
-    setInterval(() => {
-        const context = canvas.getContext('2d');
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
+    // Capture the image and send it to the backend
+    captureButton.addEventListener("click", () => {
+        const context = canvas.getContext("2d");
+        canvas.style.display = "block";
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const imageData = canvas.toDataURL("image/jpeg");
 
-        // Converter o frame capturado em base64
-        const frameData = canvas.toDataURL('image/png');
-
-        // Enviar para o backend
-        fetch('/api/opencv/detect', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ image: frameData })
+        // Send the image to the backend
+        fetch("http://localhost:8080/process-image", {
+            method: "POST",
+            body: JSON.stringify({ image: imageData }),
+            headers: { "Content-Type": "application/json" },
         })
-            .then(response => response.blob())
-            .then(blob => {
-                const url = URL.createObjectURL(blob);
-                processedFrame.src = url; // Atualizar a imagem processada no frontend
+            .then((response) => response.blob())
+            .then((blob) => {
+                // Convert the blob to a URL and display the processed image
+                processedImage.src = URL.createObjectURL(blob);
             })
-            .catch(error => console.error('Erro ao enviar frame:', error));
-    }, 500); // Enviar frames a cada 500ms
+            .catch((err) => console.error("Error processing the image:", err));
+    });
 </script>
 </body>
 </html>
