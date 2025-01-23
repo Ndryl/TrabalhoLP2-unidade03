@@ -1,5 +1,6 @@
 package com.example.MongoSpring.Controller;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import org.opencv.core.*;
 import org.opencv.dnn.*;
 import org.opencv.imgcodecs.Imgcodecs;
@@ -44,11 +45,11 @@ public class CameraController {
     }
 
     private Mat detectObjects(Mat image) throws IOException {
+        Dotenv dotenv = Dotenv.configure().load();
         // Caminhos para os arquivos do modelo YOLO
-        String modelConfiguration = "/home/jo-o-fontes/Downloads/yolo/yolov3.cfg";
-        String modelWeights = "/home/jo-o-fontes/Downloads/yolo/yolov3.weights";
-        String classNamesFile = "/home/jo-o-fontes/Downloads/yolo/coco.names";
-
+        String modelConfiguration = dotenv.get("MODEL_CONFIGURATION");
+        String modelWeights = dotenv.get("MODEL_WEIGHTS");
+        String classNamesFile = dotenv.get("CLASS_NAMES_FILE");
         // Carregar o modelo YOLO
         Net net = Dnn.readNetFromDarknet(modelConfiguration, modelWeights);
 
@@ -65,8 +66,8 @@ public class CameraController {
         net.forward(result, outBlobNames);
 
         // Processar os resultados
-        float confThreshold = 0.5f; // Limite de confiança
-        float nmsThreshold = 0.4f;  // Limite para Non-Maximum Suppression
+        float confThreshold = 0.5f;
+        float nmsThreshold = 0.4f;
         List<Rect> boxes = new ArrayList<>();
         List<Float> confidences = new ArrayList<>();
         List<Integer> classIds = new ArrayList<>();
@@ -104,11 +105,11 @@ public class CameraController {
         MatOfFloat matOfConfidences = new MatOfFloat();
         matOfConfidences.fromList(confidences);
 
-        // Aplicar Non-Maximum Suppression
+        // Aplicar Non-Maximum Suppression ( Evitar reduncancias nos retângulos)
         MatOfInt indices = new MatOfInt();
         Dnn.NMSBoxes(matOfBoxes, matOfConfidences, confThreshold, nmsThreshold, indices);
 
-        // Processar os índices retornados
+
         int[] indicesArray = indices.toArray();
         for (int idx : indicesArray) {
             Rect box = boxes.get(idx);
