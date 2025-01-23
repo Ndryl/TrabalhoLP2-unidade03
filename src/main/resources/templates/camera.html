@@ -86,12 +86,13 @@
 
 <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
 
+<script src="https://cdn.jsdelivr.net/npm/js-cookie"></script> <!-- Para gerenciar cookies -->
+<script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script> <!-- Para decodificar JWT -->
+
 <script>
     const video = document.getElementById("video");
     const canvas = document.getElementById("canvas");
     const captureButton = document.getElementById("capture");
-    const processedImage = document.getElementById("processedImage");
-    const placeholder = document.getElementById("placeholder");
 
     // Acessar a câmera
     navigator.mediaDevices
@@ -101,33 +102,53 @@
         })
         .catch((err) => console.error("Erro ao acessar a câmera:", err));
 
-    // Capturar a imagem e enviá-la ao backend
-    captureButton.addEventListener("click", () => {
+    // Capturar a imagem e criar o objeto
+    captureButton.addEventListener("click", async () => {
+        console.log(Cookies.get("jwtToken"));
+        const token = Cookies.get("jwtToken"); // Obtém o token JWT do cookie
+        if (!token) {
+            alert("Usuário não está logado!");
+            return;
+        }
+
+        const decodedToken = jwt_decode(token); // Decodifica o token JWT
+        const userId = decodedToken.userId; // Substitua "userId" pelo campo correto no seu token JWT
+
+        const nameObject = prompt("Insira o nome do objeto:");
+        if (!nameObject) {
+            alert("Nome do objeto é obrigatório!");
+            return;
+        }
+
+        // Captura a imagem
         const context = canvas.getContext("2d");
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
         const imageData = canvas.toDataURL("image/jpeg");
 
-        // Mostrar o texto "processando" enquanto a imagem está sendo enviada
-        placeholder.innerHTML = "<span>Processando imagem...</span>";
-
-        // Enviar a imagem ao backend
-        fetch("http://localhost:8080/process-image", {
-            method: "POST",
-            body: JSON.stringify({ image: imageData }),
-            headers: { "Content-Type": "application/json" },
-        })
-            .then((response) => response.blob())
-            .then((blob) => {
-                // Substituir o espaço em branco pela imagem processada
-                placeholder.style.display = "none";
-                processedImage.src = URL.createObjectURL(blob);
-                processedImage.style.display = "block";
-            })
-            .catch((err) => {
-                console.error("Erro ao processar a imagem:", err);
-                placeholder.innerHTML = "<span>Erro ao processar a imagem.</span>";
+        try {
+            const response = await fetch("http://localhost:8080/api/object/insertWithImage", {
+                method: "POST",
+                body: JSON.stringify({
+                    imagePath: imageData, // Foto em base64
+                    userId,              // ID do usuário extraído do token
+                    nameObject,          // Nome do objeto
+                }),
+                headers: { "Content-Type": "application/json" },
             });
+
+            if (response.ok) {
+                alert("Objeto salvo com sucesso!");
+            } else {
+                const errorData = await response.json();
+                console.error("Erro:", errorData);
+                alert("Erro ao salvar o objeto: " + (errorData.message || "Erro desconhecido"));
+            }
+        } catch (error) {
+            console.error("Erro de conexão:", error);
+            alert("Erro ao salvar o objeto. Verifique sua conexão.");
+        }
     });
 </script>
+
 </body>
 </html>

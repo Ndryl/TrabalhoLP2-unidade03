@@ -1,6 +1,7 @@
 package com.example.MongoSpring.Enity;
 
 import java.io.InputStream;
+import java.util.Base64;
 import java.util.List;
 
 import org.opencv.core.Mat;
@@ -83,6 +84,10 @@ public class ImageUtils {
         }
 
         return loadedImage;
+    }
+    public static byte[] base64ToBytes(String base64Image) {
+        String base64Data = base64Image.split(",")[1]; // Remove o cabeçalho "data:image/jpeg;base64,"
+        return Base64.getDecoder().decode(base64Data);
     }
 
     // Converte Mat para Image (necessário para exibir no JavaFX)

@@ -38,7 +38,7 @@ public class ObjectService {
     public MyObject saveObject(MyObject myObject) {
         return objectRepo.save(myObject);
     }
-    public MyObject saveImageAsObject(String imagePath, String userId) {
+    public MyObject saveImageAsObject(String imagePath, String userId, String nameObject) {
         // Carregar a imagem como Mat
         Mat image = ImageUtils.loadImage(imagePath);
     
@@ -55,6 +55,7 @@ public class ObjectService {
         myObject.setPhoto(imageBytes);  // Armazenar a imagem em bytes
         myObject.setUserId(userId);    // Associar ao usuário
         myObject.setDate(LocalDate.now()); // Definir a data atual
+        myObject.setNameObject(nameObject);
     
         // Salvar no repositório e retornar o objeto salvo
         return objectRepo.save(myObject);

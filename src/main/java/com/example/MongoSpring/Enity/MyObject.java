@@ -18,4 +18,5 @@ public class MyObject { // Nome alterado para evitar conflitos com java.lang.Obj
     private LocalDate date; // Usando LocalDate para datas
     private byte[] photo;
     private String userId; // ID do usuário relacionado
+    private String nameObject;
 }

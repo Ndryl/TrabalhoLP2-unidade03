@@ -3,6 +3,7 @@ package com.example.MongoSpring.Controller;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 import com.example.MongoSpring.Enity.QuantityUpdateRequest;
 
@@ -36,11 +37,26 @@ public class ObjectController {
         return ObjectService.saveObject(myObject); // Certifique-se de usar o nome correto de 'ObjectService' com "O" maiúsculo
     }
     @PostMapping("/insertWithImage")
-    public MyObject saveObjectWithImage(@RequestParam String imagePath, @RequestParam String userId) {
-        byte[] imageBytes = ImageUtils.matToBytes(ImageUtils.loadImage(imagePath));
-        MyObject myObject = new MyObject(null, LocalDate.now(), imageBytes, userId);
+    public MyObject saveObjectWithImage(@RequestBody Map<String, String> requestData) {
+        // Extrair dados do corpo da solicitação
+        String imagePath = requestData.get("imagePath");
+        String userId = requestData.get("userId");
+        String nameObject = requestData.get("nameObject");
+
+        // Verificar se os dados são válidos
+        if (imagePath == null || userId == null || nameObject == null) {
+            throw new IllegalArgumentException("Todos os campos são obrigatórios!");
+        }
+
+        // Converter a imagem base64 para bytes
+        byte[] imageBytes = ImageUtils.base64ToBytes    (imagePath);
+
+        // Criar o objeto e salvar
+        MyObject myObject = new MyObject(null, LocalDate.now(), imageBytes, userId, nameObject);
         return ObjectService.saveObject(myObject);
     }
+
+
 
 
 
