@@ -45,9 +45,9 @@ public class CameraController {
 
     private Mat detectObjects(Mat image) throws IOException {
         // Caminhos para os arquivos do modelo YOLO
-        String modelConfiguration = "/home/jo-o-fontes/Downloads/yolo/yolov3.cfg";
-        String modelWeights = "/home/jo-o-fontes/Downloads/yolo/yolov3.weights";
-        String classNamesFile = "/home/jo-o-fontes/Downloads/yolo/coco.names";
+        String modelConfiguration = "/home/hendryl/yolo/yolov3.cfg";
+        String modelWeights = "/home/hendryl/yolo/yolov3.weights";
+        String classNamesFile = "/home/hendryl/yolo/coco.names";
 
         // Carregar o modelo YOLO
         Net net = Dnn.readNetFromDarknet(modelConfiguration, modelWeights);

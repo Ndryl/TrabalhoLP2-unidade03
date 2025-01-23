@@ -28,11 +28,12 @@ public class TokenService {
             return JWT.create()
                     .withIssuer("auth-api") // Emissor do token
                     .withSubject(user.getName()) // Sujeito do token (nome do usuário)
-                    .withExpiresAt(generateExpirationDate())
+                    .withClaim("userId", user.getId()) // Adiciona o ID do usuário como uma "claim"
+                    .withExpiresAt(generateExpirationDate()) // Define a data de expiração
                     .sign(algorithm); // Assina o token
         } catch (JWTCreationException exception) {
             // Lida com exceções durante a criação do token
-            throw new RuntimeException("Error  while generating token", exception);
+            throw new RuntimeException("Error while generating token", exception);
         }
     }
 
@@ -44,6 +45,19 @@ public class TokenService {
                     .build()
                     .verify(token)
                     .getSubject();
+        } catch (JWTVerificationException exception) {
+            return "";
+        }
+    }
+
+    public String extractUserId(String token) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(secret);
+            return JWT.require(algorithm)
+                    .withIssuer("auth-api")
+                    .build()
+                    .verify(token)
+                    .getClaim("userId").asString(); // Extrai o ID do usuário da "claim"
         } catch (JWTVerificationException exception) {
             return "";
         }
