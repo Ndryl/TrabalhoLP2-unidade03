@@ -22,10 +22,9 @@ document.getElementById("loginButton").addEventListener("click", async () => {
     // Verifica se a resposta foi bem-sucedida
     if (!response.ok) {
       const error = await response.json();
-      alert(`Erro: ${error.message || "Falha no login"}`);
+      alert(`Usuário inválido: ${error.message || "Credenciais incorretas."}`);
       return;
     }
-    console.log("ok");
 
     // Obtém o token da resposta
     const data = await response.json();
@@ -34,17 +33,17 @@ document.getElementById("loginButton").addEventListener("click", async () => {
     // Salva o token no cookie
     document.cookie = `authToken=${token}; path=/; secure; HttpOnly; SameSite=Strict`;
 
-    // Exibe mensagem de sucesso ou redireciona o usuário
-    alert("Login bem-sucedido!");
-    // Redirecionar para outra página, se necessário
-    // window.location.href = "/dashboard";
+    // Redireciona para a página da câmera
+    window.location.href = "http://localhost:8080/camera";
   } catch (error) {
     console.error("Erro ao fazer login:", error);
-    alert("Erro ao conectar-se ao servidor.");
+    alert("Erro ao fazer login.");
   }
 });
+
+// Redireciona para a página de cadastro
 document
-  .getElementById("registerButton")
-  .addEventListener("click", function () {
-    window.location.href = "/register";
-  });
+    .getElementById("registerButton")
+    .addEventListener("click", function () {
+      window.location.href = "/register";
+    });
