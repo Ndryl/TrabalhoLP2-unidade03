@@ -65,7 +65,12 @@ public class CameraController {
         net.forward(result, outBlobNames);
 
         // Processar os resultados
-        float confThreshold = 0.5f;
+        float confThreshold = 0.5f; // Limite de confiança
+        float nmsThreshold = 0.4f;  // Limite para Non-Maximum Suppression
+        List<Rect> boxes = new ArrayList<>();
+        List<Float> confidences = new ArrayList<>();
+        List<Integer> classIds = new ArrayList<>();
+
         for (Mat level : result) {
             for (int i = 0; i < level.rows(); i++) {
                 Mat row = level.row(i);
@@ -81,14 +86,37 @@ public class CameraController {
                     int left = centerX - width / 2;
                     int top = centerY - height / 2;
 
-                    // Desenhar o retângulo ao redor do objeto detectado
-                    Imgproc.rectangle(image, new Point(left, top), new Point(left + width, top + height), new Scalar(0, 255, 0), 2);
-
-                    // Adicionar o nome da classe
-                    String label = classNames.get((int) classIdPoint.x);
-                    Imgproc.putText(image, label, new Point(left, top - 10), Imgproc.FONT_HERSHEY_SIMPLEX, 0.5, new Scalar(0, 255, 0), 2);
+                    boxes.add(new Rect(left, top, width, height));
+                    confidences.add(confidence);
+                    classIds.add((int) classIdPoint.x);
                 }
             }
+        }
+
+        // Converter para os formatos esperados
+        List<Rect2d> rect2dList = new ArrayList<>();
+        for (Rect rect : boxes) {
+            rect2dList.add(new Rect2d(rect.x, rect.y, rect.width, rect.height));
+        }
+        MatOfRect2d matOfBoxes = new MatOfRect2d();
+        matOfBoxes.fromList(rect2dList);
+
+        MatOfFloat matOfConfidences = new MatOfFloat();
+        matOfConfidences.fromList(confidences);
+
+        // Aplicar Non-Maximum Suppression
+        MatOfInt indices = new MatOfInt();
+        Dnn.NMSBoxes(matOfBoxes, matOfConfidences, confThreshold, nmsThreshold, indices);
+
+        // Processar os índices retornados
+        int[] indicesArray = indices.toArray();
+        for (int idx : indicesArray) {
+            Rect box = boxes.get(idx);
+            Imgproc.rectangle(image, box.tl(), box.br(), new Scalar(0, 255, 0), 2);
+
+            // Adicionar o nome da classe
+            String label = classNames.get(classIds.get(idx));
+            Imgproc.putText(image, label, new Point(box.x, box.y - 10), Imgproc.FONT_HERSHEY_SIMPLEX, 0.5, new Scalar(0, 255, 0), 2);
         }
 
         return image;
