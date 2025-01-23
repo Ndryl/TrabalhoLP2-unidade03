@@ -116,7 +116,7 @@ public class CameraController {
 
             // Adicionar o nome da classe
             String label = classNames.get(classIds.get(idx));
-            Imgproc.putText(image, label, new Point(box.x, box.y - 10), Imgproc.FONT_HERSHEY_SIMPLEX, 0.5, new Scalar(0, 128, 0), 2);
+            Imgproc.putText(image, label, new Point(box.x, box.y - 10), Imgproc.FONT_HERSHEY_SIMPLEX, 1.0, new Scalar(0, 128, 0), 2);
         }
 
         return image;
