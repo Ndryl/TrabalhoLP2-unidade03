@@ -4,9 +4,6 @@ package com.example.MongoSpring.Controller;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.example.MongoSpring.Enity.QuantityUpdateRequest;
-
-import org.opencv.core.Mat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.MongoSpring.Enity.ImageUtils;
 import com.example.MongoSpring.Enity.MyObject;
-import com.example.MongoSpring.Enity.Product;
 import com.example.MongoSpring.service.ObjectService;
 @RestController
 @RequestMapping("/api/object")
