@@ -112,11 +112,11 @@ public class CameraController {
         int[] indicesArray = indices.toArray();
         for (int idx : indicesArray) {
             Rect box = boxes.get(idx);
-            Imgproc.rectangle(image, box.tl(), box.br(), new Scalar(0, 255, 0), 2);
+            Imgproc.rectangle(image, box.tl(), box.br(), new Scalar(0, 128, 0), 2);
 
             // Adicionar o nome da classe
             String label = classNames.get(classIds.get(idx));
-            Imgproc.putText(image, label, new Point(box.x, box.y - 10), Imgproc.FONT_HERSHEY_SIMPLEX, 0.5, new Scalar(0, 255, 0), 2);
+            Imgproc.putText(image, label, new Point(box.x, box.y - 10), Imgproc.FONT_HERSHEY_SIMPLEX, 0.5, new Scalar(0, 128, 0), 2);
         }
 
         return image;

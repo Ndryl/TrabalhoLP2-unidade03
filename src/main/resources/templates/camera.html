@@ -4,36 +4,113 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Camera Capture</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .left-section, .right-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        video, canvas, img {
+            border: 2px solid #ddd;
+            border-radius: 8px;
+        }
+
+        #capture {
+            margin-top: 10px;
+            padding: 15px 25px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #capture:hover {
+            background-color: #0056b3;
+        }
+
+        .placeholder {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 640px;
+            height: 480px;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            background-color: #fff;
+        }
+
+        #processedImage {
+            display: none;
+            width: 640px;
+            height: 480px;
+        }
+    </style>
 </head>
 <body>
-<h1>Capture Image and Detect Object</h1>
-<video id="video" width="640" height="480" autoplay></video>
+<div class="container">
+    <!-- Seção esquerda -->
+    <div class="left-section">
+        <video id="video" width="640" height="480" autoplay></video>
+        <button id="capture">Capturar</button>
+    </div>
+
+    <!-- Seção direita -->
+    <div class="right-section">
+        <div id="placeholder" class="placeholder">
+            <span>Aguardando imagem...</span>
+        </div>
+        <img id="processedImage" alt="Processed Image" />
+    </div>
+</div>
+
 <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
-<button id="capture">Capture Image</button>
-<img id="processedImage" alt="Processed Image" />
 
 <script>
     const video = document.getElementById("video");
     const canvas = document.getElementById("canvas");
     const captureButton = document.getElementById("capture");
     const processedImage = document.getElementById("processedImage");
+    const placeholder = document.getElementById("placeholder");
 
-    // Access the camera
+    // Acessar a câmera
     navigator.mediaDevices
         .getUserMedia({ video: true })
         .then((stream) => {
             video.srcObject = stream;
         })
-        .catch((err) => console.error("Error accessing the camera:", err));
+        .catch((err) => console.error("Erro ao acessar a câmera:", err));
 
-    // Capture the image and send it to the backend
+    // Capturar a imagem e enviá-la ao backend
     captureButton.addEventListener("click", () => {
         const context = canvas.getContext("2d");
-        canvas.style.display = "block";
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
         const imageData = canvas.toDataURL("image/jpeg");
 
-        // Send the image to the backend
+        // Mostrar o texto "processando" enquanto a imagem está sendo enviada
+        placeholder.innerHTML = "<span>Processando imagem...</span>";
+
+        // Enviar a imagem ao backend
         fetch("http://localhost:8080/process-image", {
             method: "POST",
             body: JSON.stringify({ image: imageData }),
@@ -41,10 +118,15 @@
         })
             .then((response) => response.blob())
             .then((blob) => {
-                // Convert the blob to a URL and display the processed image
+                // Substituir o espaço em branco pela imagem processada
+                placeholder.style.display = "none";
                 processedImage.src = URL.createObjectURL(blob);
+                processedImage.style.display = "block";
             })
-            .catch((err) => console.error("Error processing the image:", err));
+            .catch((err) => {
+                console.error("Erro ao processar a imagem:", err);
+                placeholder.innerHTML = "<span>Erro ao processar a imagem.</span>";
+            });
     });
 </script>
 </body>
