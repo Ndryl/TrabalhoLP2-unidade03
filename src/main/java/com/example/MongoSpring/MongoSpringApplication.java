@@ -9,8 +9,7 @@ import nu.pattern.OpenCV;
 public class MongoSpringApplication {
 
 	public static void main(String[] args) {
-		// Inicializando o OpenCV
-        OpenCV.loadShared();
+
 		// Iniciando a aplicação Spring Boot
 		SpringApplication.run(MongoSpringApplication.class, args);
         

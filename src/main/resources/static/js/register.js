@@ -44,7 +44,7 @@ document
       }
     
       alert("Usuário registrado com sucesso!");
-      window.location.href = "/begin";
+      window.location.href = "/login";
     } catch (error) {
       console.error("Erro ao registrar usuário:", error);
       alert("Erro ao conectar-se ao servidor.");
