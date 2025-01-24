@@ -48,5 +48,18 @@ public class ObjectController {
     public MyObject updatedObject(@PathVariable String id, MyObject newObject){
         return ObjectService.updateObject(id, newObject);
     }
+    @PostMapping("/createFromProcessedImage")
+    public MyObject createObjectFromProcessedImage(@RequestBody byte[] processedImage) {
+        // Criar o objeto MyObject
+        MyObject myObject = new MyObject();
+        myObject.setPhoto(processedImage);      // Configurar a imagem processada
+        myObject.setUserId("");                 // Deixar userId vazio
+        myObject.setDate(LocalDate.now());      // Configurar a data atual
+
+        // Salvar no banco de dados e retornar o objeto criado
+        return ObjectService.saveObject(myObject);
+    }
+    
+
 
 }

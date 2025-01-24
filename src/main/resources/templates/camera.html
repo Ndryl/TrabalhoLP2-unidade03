@@ -122,6 +122,14 @@
                 placeholder.style.display = "none";
                 processedImage.src = URL.createObjectURL(blob);
                 processedImage.style.display = "block";
+
+                // Converter imagem processada para Base64
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    const base64data = reader.result;
+                    console.log("Imagem processada em Base64:", base64data);
+                };
+                reader.readAsDataURL(blob);
             })
             .catch((err) => {
                 console.error("Erro ao processar a imagem:", err);

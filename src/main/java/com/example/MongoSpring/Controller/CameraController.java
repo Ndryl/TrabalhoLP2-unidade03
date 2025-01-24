@@ -5,12 +5,18 @@ import org.opencv.core.*;
 import org.opencv.dnn.*;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+
+import com.example.MongoSpring.Enity.ImageUtils;
+import com.example.MongoSpring.Enity.MyObject;
+import com.example.MongoSpring.service.ObjectService;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -18,23 +24,36 @@ import java.util.List;
 @RestController
 @RequestMapping("/process-image")
 public class CameraController {
+    
 
     static {
         // Carregar a biblioteca OpenCV
         nu.pattern.OpenCV.loadLocally();
     }
+    @Autowired
+    private ObjectService objectService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.IMAGE_JPEG_VALUE)
-    public byte[] processImage(@RequestBody ImageRequest imageRequest) {
+    public byte[] processImageAndSave(@RequestBody ImageRequest imageRequest) {
         try {
-            // Decodificar a imagem base64 recebida do front-end
+            // Decodificar a imagem base64 recebida
             byte[] decodedBytes = Base64.getDecoder().decode(imageRequest.getImage().split(",")[1]);
             Mat image = Imgcodecs.imdecode(new MatOfByte(decodedBytes), Imgcodecs.IMREAD_COLOR);
 
-            // Detectar objetos na imagem
+            // Processar a imagem
             Mat processedImage = detectObjects(image);
 
-            // Codificar a imagem para enviar de volta ao front-end
+            // Converter Mat para byte[]
+            byte[] processedImageBytes = ImageUtils.matToBytes(processedImage);
+
+            // Criar e salvar um MyObject com a imagem processada
+            MyObject myObject = new MyObject();
+            myObject.setPhoto(processedImageBytes);
+            myObject.setUserId(""); // Sem usuário
+            myObject.setDate(LocalDate.now());
+            objectService.saveObject(myObject); // Usar a instância do serviço injetada
+
+            // Retornar a imagem processada ao cliente
             MatOfByte buffer = new MatOfByte();
             Imgcodecs.imencode(".jpg", processedImage, buffer);
             return buffer.toArray();
@@ -43,6 +62,8 @@ public class CameraController {
             return null;
         }
     }
+    
+
 
     private Mat detectObjects(Mat image) throws IOException {
         Dotenv dotenv = Dotenv.configure().load();
